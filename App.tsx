@@ -12,19 +12,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/views/home/Home';
 
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './src/redux/reducer';
+import rootReducer from './src/redux/Reducer';
 import createSagaMiddleware from 'redux-saga'
+import CustomStore from './src/redux/CustomStore';
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   const sagaMiddleware = createSagaMiddleware();
-
-  const store = createStore(
-    rootReducer, 
-    applyMiddleware(sagaMiddleware)
-  )
+  const store = new CustomStore(rootReducer, sagaMiddleware);
 
   return (
     <Provider store={store}>

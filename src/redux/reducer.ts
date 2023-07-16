@@ -5,7 +5,7 @@ interface RootState {
 }
 
 function reducer(state = {
-    count: 12
+    count: 15
 }, action: AnyAction) {
 
     console.log('Reducer', action);

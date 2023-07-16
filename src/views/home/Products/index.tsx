@@ -3,12 +3,28 @@ import {
     Text,
     View,
   } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import SearchInput from './SearchInput';
 import reducer from './redux/reducers/typeSearch';
+import CustomStore from '../../../redux/CustomStore';
+import { useEffect, useState } from 'react';
+import { rootSaga } from './redux/sagas/SearchSaga';
 
 function Products() {
   const dispatch = useDispatch();
+  const store = useStore() as CustomStore;
+
+  // const [task, setTask] = useState(store.run(rootSaga));
+
+  useEffect(function registerSaga() {
+    const task = store.run(rootSaga);
+    return () => {
+      if (task) {
+        task.cancel();
+      }
+    }
+  }, []);
+  
   const count = useSelector((state: any) => (state.count) );
   const searchInputValue = useSelector((state: any) => (state.searchInputValue) );
   const onChangeText = (payload: any) => dispatch({ 

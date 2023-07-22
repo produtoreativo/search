@@ -15,6 +15,7 @@ import { Provider } from 'react-redux';
 import rootReducer from './src/redux/Reducer';
 import createSagaMiddleware from 'redux-saga'
 import CustomStore from './src/redux/CustomStore';
+import CheckoutScreen from './src/views/checkout/Checkout';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +27,8 @@ function App(): JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Magazine Siará" component={HomeScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Checkout" component={CheckoutScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

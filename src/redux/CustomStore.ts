@@ -1,48 +1,52 @@
 import { 
-    applyMiddleware, 
-    legacy_createStore,
-    Store, 
-    Observable, 
-    Reducer, 
-    Action 
+  applyMiddleware, 
+  legacy_createStore,
+  Store, 
+  Observable, 
+  Reducer,
+  Dispatch,
 } from 'redux';
-
-import { Saga, SagaMiddleware, Task } from 'redux-saga'
+import { Saga, SagaMiddleware, Task } from 'redux-saga';
+import { GlobalState, GlobalAction } from './Reducer';
 
 interface StoreWithSagas {
-    run: any
+  run<S extends Saga>(saga: S, ...args: Parameters<S>): Task
 }
-  
-export default class CustomStore implements Store<any, Action>, StoreWithSagas {
-    private store: Store<any, Action>;
-    private sagaMiddleware: SagaMiddleware;
-  
-    constructor(reducer: Reducer, sagaMiddleware: SagaMiddleware) {
-      this.store = legacy_createStore(reducer, applyMiddleware(sagaMiddleware));
+
+
+export default class CustomStore implements Store<GlobalState, GlobalAction>, StoreWithSagas {
+  private store: Store<GlobalState, GlobalAction>;
+  private sagaMiddleware: SagaMiddleware;
+
+  constructor(reducer: Reducer, sagaMiddleware: SagaMiddleware) {
       this.sagaMiddleware = sagaMiddleware;
-    }
-  
-    [Symbol.observable](): Observable<any> {
-      return this.store[Symbol.observable]();
-    }
-  
-    getState = (): any => {
-      return this.store.getState();
-    }
-  
-    dispatch = (action: Action): any => {
-      this.store.dispatch(action);
-    }
-  
-    subscribe = (listener: () => void): () => void => {
-      return this.store.subscribe(listener);
-    }
-  
-    replaceReducer = (nextReducer: (state: any, action: Action) => any): void  => {
-      this.store.replaceReducer(nextReducer);
-    }
-  
-    run = (saga: Saga): Task<any> => {
-      return this.sagaMiddleware.run(saga);
-    }
+      // this.sagaMiddleware.run();
+      this.store = legacy_createStore(
+          reducer, 
+          applyMiddleware(this.sagaMiddleware)
+      );
   }
+
+  run<S extends Saga>(saga: S, ...args: Parameters<S>): Task {
+      return this.sagaMiddleware.run(saga, ...args);
+  }
+
+  [Symbol.observable](): Observable<GlobalState> {
+    return this.store[Symbol.observable]();
+  }
+
+  getState = (): GlobalState => {
+    return this.store.getState();
+  }
+
+  dispatch: Dispatch<GlobalAction> = (action) => this.store.dispatch(action);  
+
+  subscribe = (listener: () => void): () => void => {
+    return this.store.subscribe(listener);
+  }
+
+  replaceReducer = (nextReducer: Reducer<GlobalState, GlobalAction>)  => {
+    this.store.replaceReducer(nextReducer);
+  }
+
+}

@@ -12,6 +12,11 @@ function reducer(state = {}, action: AnyAction) {
         }
     }
 
+    // if (action.type === 'clear_product_module') {
+    //     const newState = delete state.searchInputValue;
+    //     return newState
+    // }
+
     return state;
 }
 

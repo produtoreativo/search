@@ -14,13 +14,13 @@ function Products() {
   const dispatch = useDispatch();
   const store = useStore() as CustomStore;
 
-  // const [task, setTask] = useState(store.run(rootSaga));
-
   useEffect(function registerSaga() {
     const task = store.run(rootSaga);
     return () => {
       if (task) {
         task.cancel();
+        // Limpar propriedades que somente o modulo utiliza
+        // dispatch({ type: 'clear_product_module'})
       }
     }
   }, []);

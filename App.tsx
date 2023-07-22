@@ -12,7 +12,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './src/views/home/Home';
 
 import { Provider } from 'react-redux';
-import rootReducer from './src/redux/Reducer';
+import rootReducer from './src/redux/reducer';
 import createSagaMiddleware from 'redux-saga'
 import CustomStore from './src/redux/CustomStore';
 import CheckoutScreen from './src/views/checkout/Checkout';
